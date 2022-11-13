@@ -54,12 +54,26 @@ def get_temp(printer_address):
     send_and_receive(printer_address, request_control_message)
     info_result = send_and_receive(printer_address, request_temp)
 
-    regex_temp = regex_for_current_temperature()
-    regex_target_temp = regex_for_target_temperature()
-    temp = re.search(regex_temp, info_result).groups()[0]
-    target_temp = re.search(regex_target_temp, info_result).groups()[0]
+    extruder_regex_temp = regex_for_current_temperature(False)
+    extruder_regex_target_temp = regex_for_target_temperature(False)
+    bed_regex_temp = regex_for_current_temperature(True)
+    bed_regex_target_temp = regex_for_target_temperature(True)
 
-    return {'Temperature': temp, 'TargetTemperature': target_temp}
+    print(info_result)
+    print(extruder_regex_temp)
+
+    extruder_temp = re.search(extruder_regex_temp, info_result).groups()[0]
+    extruder_target_temp = re.search(extruder_regex_target_temp, info_result).groups()[0]
+
+    bed_temp = re.search(bed_regex_temp, info_result).groups()[0]
+    bed_target_temp = re.search(bed_regex_target_temp, info_result).groups()[0]
+
+    return {
+        'ExtruderTemperature': int(extruder_temp), 
+        'ExtruderTargetTemperature': int(extruder_target_temp),
+        'BedTemperature': int(bed_temp), 
+        'BedTargetTemperature': int(bed_target_temp)
+    }
 
 
 def get_progress(printer_address):

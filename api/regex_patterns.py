@@ -9,16 +9,22 @@ def regex_for_coordinates(field_name):
     return field_name + ':(.+?) '
 
 
-def regex_for_current_temperature():
+def regex_for_current_temperature(BED=False):
     """T0:210 /210 B:0 /0"""
 
-    return 'T0:([0-9].*?) '
+    if BED:
+        return 'B:([0-9].*?)/[0-9]*'
+    else:
+        return 'T0:([0-9].*?)/[0-9]* '
 
 
-def regex_for_target_temperature():
+def regex_for_target_temperature(BED=False):
     """ T0:210 /210 B:0 /0 """
 
-    return '\/([0-9].*?) '
+    if BED:
+        return 'B:[0-9].*?\/([0-9]*)'
+    else:
+        return 'T0:[0-9].*?\/([0-9].*?) '
 
 
 def regex_for_progress():
